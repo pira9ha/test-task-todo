@@ -5,7 +5,7 @@ import { Form } from "./editors/Form";
 import { TodoListModel } from "../models/TodoContent";
 import { HoveredContainer, HoverEdit } from "./styled/HoverButtons";
 import {useDispatch} from "react-redux";
-import {actions} from "../helper/appStateSlice";
+import {actions} from "../stateWorker/appStateSlice";
 
 type TodoListHeadProps = {
   callback: () => void;

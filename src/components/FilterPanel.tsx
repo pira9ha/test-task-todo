@@ -1,7 +1,7 @@
 import { FilterContainer, FilterItems } from "./styled/FilterItems";
 import { CustomRadio } from "./styled/common/CustomCheckbox";
 import { Status } from "../models/Status";
-import { actions } from "../helper/appStateSlice";
+import { actions } from "../stateWorker/appStateSlice";
 import React, { FC } from "react";
 import { useDispatch } from "react-redux";
 import { PropsWithFilter } from "../models/Props";

@@ -6,7 +6,7 @@ import { Status } from "../models/Status";
 import { HoveredContainer, HoverEdit } from "./styled/HoverButtons";
 import { Form } from "./editors/Form";
 import { useDispatch } from "react-redux";
-import { actions } from "../helper/appStateSlice";
+import { actions } from "../stateWorker/appStateSlice";
 
 type ListItemProps = {
   task: Task;

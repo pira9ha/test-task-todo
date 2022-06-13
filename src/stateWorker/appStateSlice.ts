@@ -1,8 +1,9 @@
 import { FilterItem, Task, TodoListModel } from "../models/TodoContent";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Status } from "../models/Status";
+import {addToStorage} from "./localStorage.service";
 
-interface InitialStateModel {
+export interface InitialStateModel {
   lists: TodoListModel[];
   filter: FilterItem[];
 }
@@ -16,15 +17,9 @@ export const appStateSlice = createSlice({
   name: "appState",
   initialState,
   reducers: {
-    getAll: (state, action: PayloadAction<TodoListModel[]>) => {
-      state.lists = [...state.lists, ...action.payload];
-      state.filter = [
-        ...state.filter,
-        ...action.payload.map((list) => ({
-          listId: list.id,
-          value: Status.All,
-        })),
-      ];
+    getAll: (state, action: PayloadAction<InitialStateModel>) => {
+      state.lists = [...state.lists, ...action.payload.lists];
+      state.filter = [...state.filter, ...action.payload.filter];
     },
     addList: (state, action: PayloadAction<TodoListModel>) => {
       state.lists = [...state.lists, action.payload];
@@ -32,6 +27,7 @@ export const appStateSlice = createSlice({
         ...state.filter,
         { listId: action.payload.id, value: Status.All },
       ];
+      addToStorage(state);
     },
     updateList: (
       state,
@@ -44,6 +40,7 @@ export const appStateSlice = createSlice({
         }
         return item;
       });
+      addToStorage(state);
     },
     updateFilter: (
       state,
@@ -68,9 +65,11 @@ export const appStateSlice = createSlice({
         }
         return item;
       });
+      addToStorage(state);
     },
     deleteList: (state, action: PayloadAction<TodoListModel>) => {
       state.lists = state.lists.filter((item) => item.id !== action.payload.id);
+      addToStorage(state);
     },
     addTask: (
       state,
@@ -94,6 +93,7 @@ export const appStateSlice = createSlice({
         }
         return item;
       });
+      addToStorage(state);
     },
     deleteTask: (
       state,
@@ -112,6 +112,7 @@ export const appStateSlice = createSlice({
         }
         return item;
       });
+      addToStorage(state);
     },
     updateTask: (
       state,
@@ -133,15 +134,16 @@ export const appStateSlice = createSlice({
               filter && filter.value !== Status.All
                 ? item.filteredTasks.filter((elem) => elem.id !== task.id)
                 : item.filteredTasks.map((elem) => {
-                  if (elem.id === task.id) {
-                    return task;
-                  }
-                  return elem;
-                }),
+                    if (elem.id === task.id) {
+                      return task;
+                    }
+                    return elem;
+                  }),
           };
         }
         return item;
       });
+      addToStorage(state);
     },
   },
 });

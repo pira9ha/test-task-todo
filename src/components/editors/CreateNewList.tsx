@@ -2,11 +2,12 @@ import React, { useState } from "react";
 import { Form } from "./Form";
 import { NewTodo } from "../styled/TodoList";
 import { useDispatch } from "react-redux";
-import {actions} from "../../helper/appStateSlice";
+import {actions} from "../../stateWorker/appStateSlice";
 import uniqueId from "lodash.uniqueid";
 
 export const CreateNewList = () => {
   const [createList, setCreateList] = useState(false);
+  const randomNum = Math.random();
   const dispatch = useDispatch();
 
   return createList ? (
@@ -14,7 +15,7 @@ export const CreateNewList = () => {
       createList={true}
       submit={(value) => {
         const list = {
-          id: uniqueId(`list_`),
+          id: uniqueId(`list_${randomNum}`),
           name: value,
           tasks: [],
           filteredTasks: [],
