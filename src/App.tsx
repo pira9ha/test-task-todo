@@ -1,25 +1,27 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import "./App.css";
+import { Headline } from "./components/styled/common/Headline";
+import { TodoTable } from "./components/TodoTable";
+import { CreateNewList } from "./components/editors/CreateNewList";
+import { useSelector } from "react-redux";
+import {RootState} from "./helper/store";
 
 function App() {
+  const { lists, filter } = useSelector((state: RootState) => state.appState);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <main className="App">
+      <Headline className="App-header">todos</Headline>
+      {lists &&
+        lists.map((list) => (
+          <TodoTable
+            key={list.id}
+            list={list}
+            filter={filter.find((item) => item.listId === list.id)!}
+          />
+        ))}
+      <CreateNewList />
+    </main>
   );
 }
 
