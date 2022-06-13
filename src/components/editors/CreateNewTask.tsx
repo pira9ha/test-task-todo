@@ -18,7 +18,6 @@ export const CreateNewTask: FC<PropsWithList> = ({ list }) => {
           id: uniqueId(`task_`),
           name: value,
           status: Status.Undone,
-          importance: false,
         };
         dispatch(actions.addTask({list, task}));
       }}

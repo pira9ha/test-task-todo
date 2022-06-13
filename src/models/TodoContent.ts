@@ -4,7 +4,6 @@ export interface Task {
   id: string;
   name: string;
   status: Status;
-  importance: boolean;
 }
 
 export interface TodoListModel {

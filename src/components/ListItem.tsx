@@ -28,10 +28,13 @@ export const ListItem: FC<ListItemProps> = ({ task, list }) => {
             const status =
               task.status === Status.Done ? Status.Undone : Status.Done;
             dispatch(
-              actions.updateTaskStatus({
+              actions.updateTask({
                 list,
-                task,
-                status,
+                task: {
+                  id: task.id,
+                  name: task.name,
+                  status,
+                },
               }),
             );
           }}
@@ -48,8 +51,11 @@ export const ListItem: FC<ListItemProps> = ({ task, list }) => {
       value={task.name}
       submit={(value) => dispatch(actions.updateTask({
         list,
-        task,
-        newName: value,
+        task: {
+          id: task.id,
+          name: value,
+          status: task.status,
+        },
       }))}
       reset={() => setEditTask(false)}
     />

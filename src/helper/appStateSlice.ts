@@ -1,6 +1,6 @@
-import {FilterItem, Task, TodoListModel} from "../models/TodoContent";
-import {createSlice, PayloadAction} from "@reduxjs/toolkit";
-import {Status} from "../models/Status";
+import { FilterItem, Task, TodoListModel } from "../models/TodoContent";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { Status } from "../models/Status";
 
 interface InitialStateModel {
   lists: TodoListModel[];
@@ -58,10 +58,12 @@ export const appStateSlice = createSlice({
       });
       state.lists = state.lists.map((item) => {
         if (item.id === list.id) {
-          if(filter === Status.All) {
+          if (filter === Status.All) {
             item.filteredTasks = [...item.tasks];
           } else {
-            item.filteredTasks = item.tasks.filter((task) => task.status === filter);
+            item.filteredTasks = item.tasks.filter(
+              (task) => task.status === filter,
+            );
           }
         }
         return item;
@@ -78,34 +80,17 @@ export const appStateSlice = createSlice({
       const filter = state.filter.find((item) => item.listId === list.id);
       state.lists = state.lists.map((item) => {
         if (item.id === list.id) {
-          if(filter && (filter.value === Status.All || filter.value === task.status)) {
-            return { ...item, tasks: [...item.tasks, task], filteredTasks: [...item.filteredTasks, task] };
+          if (
+            filter &&
+            (filter.value === Status.All || filter.value === task.status)
+          ) {
+            return {
+              ...item,
+              tasks: [...item.tasks, task],
+              filteredTasks: [...item.filteredTasks, task],
+            };
           }
           return { ...item, tasks: [...item.tasks, task] };
-        }
-        return item;
-      });
-    },
-    updateTask: (
-      state,
-      action: PayloadAction<{
-        list: TodoListModel;
-        task: Task;
-        newName: string;
-      }>,
-    ) => {
-      const { list, task, newName } = action.payload;
-      state.lists = state.lists.map((item) => {
-        if (item.id === list.id) {
-          return {
-            ...item,
-            tasks: item.tasks.map((elem) => {
-              if (elem.id === task.id) {
-                elem.name = newName;
-              }
-              return elem;
-            }),
-          };
         }
         return item;
       });
@@ -120,28 +105,39 @@ export const appStateSlice = createSlice({
           return {
             ...item,
             tasks: item.tasks.filter((elem) => elem.id !== task.id),
-            filteredTasks: item.filteredTasks.filter((elem) => elem.id !== task.id),
+            filteredTasks: item.filteredTasks.filter(
+              (elem) => elem.id !== task.id,
+            ),
           };
         }
         return item;
       });
     },
-    updateTaskStatus: (
+    updateTask: (
       state,
-      action: PayloadAction<{ list: TodoListModel; status: Status; task: Task }>,
+      action: PayloadAction<{ list: TodoListModel; task: Task }>,
     ) => {
-      const { list, status, task } = action.payload;
+      const { list, task } = action.payload;
+      const filter = state.filter.find((item) => item.listId === list.id);
       state.lists = state.lists.map((item) => {
         if (item.id === list.id) {
           return {
             ...item,
             tasks: item.tasks.map((elem) => {
               if (elem.id === task.id) {
-                elem.status = status;
+                return task;
               }
               return elem;
             }),
-            filteredTasks: item.filteredTasks.filter((elem) => elem.id !== task.id),
+            filteredTasks:
+              filter && filter.value !== Status.All
+                ? item.filteredTasks.filter((elem) => elem.id !== task.id)
+                : item.filteredTasks.map((elem) => {
+                  if (elem.id === task.id) {
+                    return task;
+                  }
+                  return elem;
+                }),
           };
         }
         return item;
