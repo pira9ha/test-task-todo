@@ -5,7 +5,7 @@ import * as yup from 'yup';
 
 interface FormValue {
   name: string;
-};
+}
 
 type FormProps = {
   reset: () => void;
@@ -31,6 +31,7 @@ export const Form: FC<FormProps> = (props) => {
 
   return (
     <FormContainer
+      data-testid="form"
       onSubmit={handleSubmit}
       createList={props.createList}
       editTitle={props.editTitle}

@@ -25,7 +25,7 @@ export const CreateNewList = () => {
       reset={() => setCreateList(false)}
     />
   ) : (
-    <NewTodo onClick={() => setCreateList(true)}>
+    <NewTodo data-new-list="button" onClick={() => setCreateList(true)}>
       Создать новый список задач
     </NewTodo>
   );

@@ -1,7 +1,7 @@
 import { FilterItem, Task, TodoListModel } from "../models/TodoContent";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Status } from "../models/Status";
-import {addToStorage} from "./localStorage.service";
+import { addToStorage } from "./localStorage.service";
 
 export interface InitialStateModel {
   lists: TodoListModel[];
@@ -9,8 +9,42 @@ export interface InitialStateModel {
 }
 
 export const initialState: InitialStateModel = {
-  lists: [],
-  filter: [],
+  lists: [
+    {
+      id: "1",
+      name: "Первый список, который можно отредактировать. Просто нажми на меня!",
+      tasks: [
+        {
+          id: "1",
+          name: "Задача, которую надо выполнить.",
+          status: Status.Undone,
+        },
+        {
+          id: "2",
+          name: "Выполненная задача.",
+          status: Status.Done,
+        },
+      ],
+      filteredTasks: [
+        {
+          id: "1",
+          name: "Задача, которую надо выполнить.",
+          status: Status.Undone,
+        },
+        {
+          id: "2",
+          name: "Выполненная задача.",
+          status: Status.Done,
+        },
+      ],
+    },
+  ],
+  filter: [
+    {
+      listId: "1",
+      value: Status.All,
+    },
+  ],
 };
 
 export const appStateSlice = createSlice({
@@ -18,8 +52,11 @@ export const appStateSlice = createSlice({
   initialState,
   reducers: {
     getAll: (state, action: PayloadAction<InitialStateModel>) => {
-      state.lists = [...state.lists, ...action.payload.lists];
-      state.filter = [...state.filter, ...action.payload.filter];
+      const {lists, filter} = action.payload;
+      if (lists.length > 0) {
+        state.lists = [...lists];
+        state.filter = [...filter];
+      }
     },
     addList: (state, action: PayloadAction<TodoListModel>) => {
       state.lists = [...state.lists, action.payload];
@@ -69,6 +106,9 @@ export const appStateSlice = createSlice({
     },
     deleteList: (state, action: PayloadAction<TodoListModel>) => {
       state.lists = state.lists.filter((item) => item.id !== action.payload.id);
+      state.filter = state.filter.filter(
+        (item) => item.listId !== action.payload.id,
+      );
       addToStorage(state);
     },
     addTask: (
@@ -119,7 +159,6 @@ export const appStateSlice = createSlice({
       action: PayloadAction<{ list: TodoListModel; task: Task }>,
     ) => {
       const { list, task } = action.payload;
-      const filter = state.filter.find((item) => item.listId === list.id);
       state.lists = state.lists.map((item) => {
         if (item.id === list.id) {
           return {
@@ -130,15 +169,6 @@ export const appStateSlice = createSlice({
               }
               return elem;
             }),
-            filteredTasks:
-              filter && filter.value !== Status.All
-                ? item.filteredTasks.filter((elem) => elem.id !== task.id)
-                : item.filteredTasks.map((elem) => {
-                    if (elem.id === task.id) {
-                      return task;
-                    }
-                    return elem;
-                  }),
           };
         }
         return item;
