@@ -5,7 +5,7 @@ import {ButtonNormalize} from "../common/StyleFragments";
 export const Input = styled.textarea`
   font-family: inherit;
   font-size: inherit;
-  max-width: 855px;
+  max-width: 100%;
   min-width: 100%;
   padding: 10px;
   min-height: 50px;
